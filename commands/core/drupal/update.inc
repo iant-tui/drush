@@ -208,7 +208,7 @@ function update_main_prepare() {
     cache_clear_all('*', 'cache_update', TRUE);
   }
 
-  module_implements_reset();
+  drush_module_implements_reset();
 }
 
 function update_main() {

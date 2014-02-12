@@ -115,6 +115,74 @@ function drush_module_list() {
 }
 
 /**
+ * Determines which modules are implementing a hook.
+ *
+ * This is a wrapper for module_implements() but does not support the $sort or
+ * $refresh parameters.
+ */
+function drush_module_implements($hook) {
+  return module_implements($hook);
+}
+
+/**
+ * Regenerate the stored list of hook implementations.
+ *
+ * This is a wrapper for module_implements('', FALSE, TRUE).
+ * This is a wrapper for \Drupal::moduleHandler()->resetImplementations().
+ */
+function drush_module_implements_reset() {
+  \Drupal::moduleHandler()->resetImplementations();
+}
+
+/**
+ * Invokes a hook in a particular module.
+ *
+ * All arguments are passed by value. Use drupal_alter() if you need to pass
+ * arguments by reference.
+ *
+ * This is a wrapper for module_invoke().
+ */
+function drush_module_invoke($module, $hook) {
+  $args = func_get_args();
+  // Remove $module and $hook from the arguments.
+  unset($args[0], $args[1]);
+  return call_user_func_array('module_invoke', $args);
+}
+
+/**
+ * Invokes a hook in all enabled modules that implement it.
+ *
+ * All arguments are passed by value. Use drupal_alter() if you need to pass
+ * arguments by reference.
+ *
+ * This is a wrapper for module_invoke_all().
+ */
+function drush_module_invoke_all($hook) {
+  $args = func_get_args();
+  // Remove $hook from the arguments.
+  array_shift($args);
+  return call_user_func_array('module_invoke_all', $hook, $args);
+}
+
+/**
+ * Passes alterable variables to specific hook_TYPE_alter() implementations.
+ *
+ * This is a wrapper for drupal_alter().
+ */
+function drush_drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
+  return drupal_alter($type, $data, $context1, $context2);
+}
+
+/**
+ * Determines whether a given module exists.
+ *
+ * This is a wrapper for module_exists().
+ */
+function drush_module_exists($module) {
+  return module_exists($module);
+}
+
+/**
  * Return a list of modules from a list of named modules.
  * Both enabled and disabled/uninstalled modules are returned.
  */
