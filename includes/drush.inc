@@ -84,12 +84,6 @@ function drush_include($path, $name, $version = NULL, $extension = 'inc') {
  *   major version number to the end of the class name before instantiation.
  * @param $constructor_args
  *   An array of arguments to pass to the class constructor.
- * @param $class_dir
- *   The directory where the commandfile stores its classes.
- *   For Drush Core, using the default value will search the
- *   'classes' directory in the Drupal root.  If the class file(s) are
- *   stored in the same directory as your commandfile, pass
- *   dirname(__FILE__) here.
  *
  * Example wrapper class to instantiate a widget, called with the
  * arguments for the WIDGET_CLASS constructor:
@@ -98,12 +92,8 @@ function drush_include($path, $name, $version = NULL, $extension = 'inc') {
  *    retrun drush_get_class('Widget_Class', func_get_args()));
  *  }
  */
-function drush_get_class($class_name, $constructor_args, $class_dir = NULL) {
-  if (!isset($class_dir)) {
-    $class_dir = DRUSH_BASE_PATH . '/classes';
-  }
+function drush_get_class($class_name, $constructor_args) {
   $version = drush_drupal_major_version();
-  drush_include($class_dir, $class_name, $version, 'php');
   $version_specific_class_name = $class_name . $version;
   if (class_exists($version_specific_class_name)) {
     $reflectionClass = new ReflectionClass($version_specific_class_name);
@@ -289,8 +279,8 @@ function drush_get_global_options($brief = FALSE) {
     $options['show-passwords']      = array('description' => "Show database passwords in commands that display connection information.");
     $options['show-invoke']         = array('description' => "Show all function names which could have been called for the current command. See drush_invoke().");
     $options['watchdog']            = array('description' => "Control logging of Drupal's watchdog() to drush log. Recognized values are 'log', 'print', 'disabled'. Defaults to log. 'print' shows calls to admin but does not add them to the log.", 'example-value' => 'print');
-    $options['cache-default-class'] = array('description' => "A cache backend class that implements DrushCacheInterface. Defaults to DrushJSONCache.", 'example-value' => 'DrushJSONCache');
-    $options['cache-class-<bin>']   = array('description' => "A cache backend class that implements DrushCacheInterface to use for a specific cache bin.", 'example-value' => 'className');
+    $options['cache-default-class'] = array('description' => "A cache backend class that implements CacheInterface. Defaults to JSONCache.", 'example-value' => 'JSONCache');
+    $options['cache-class-<bin>']   = array('description' => "A cache backend class that implements CacheInterface to use for a specific cache bin.", 'example-value' => 'className');
     $options['early']               = array('description' => "Include a file (with relative or full path) and call the drush_early_hook() function (where 'hook' is the filename). The function is called pre-bootstrap and offers an opportunity to alter the drush bootstrap environment or process (returning FALSE from the function will continue the bootstrap), or return output very rapidly (e.g. from caches). See includes/complete.inc for an example.");
     $options['alias-path']          = array('context' => 'ALIAS_PATH', 'local-context-only' => TRUE, 'merge-pathlist' => TRUE, 'propagate-cli-value' => TRUE, 'description' => "Specifies the list of paths where drush will search for alias files.", 'example-value' => '/path/alias1:/path/alias2');
     $options['backup-location']     = array('description' => "Specifies the directory where drush will store backups.", 'example-value' => '/path/to/dir');

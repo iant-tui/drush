@@ -86,31 +86,16 @@ INSTALL - COMPOSER
 
 [Fuller explanation of the require command.](http://getcomposer.org/doc/03-cli.md#require)
 
-INSTALL - PEAR
------------
-If you have trouble with PEAR installation, consider trying MANUAL INSTALLATION. It is not too hard.
+**Tip:**
 
-```bash
-pear channel-discover pear.drush.org
-pear install drush/drush
+If composer cannot find a requirement, and suggests that *The package is not available in a stable-enough version according to your minimum-stability setting*, then place the following
+in `$HOME/.composer/composer.json`:
 ```
-
-_Tip: Use sudo to overcome permission problems.  If the channel-discover fails, try running the following sequence of commands:_
-
-```bash
-pear upgrade --force Console_Getopt
-pear upgrade --force pear
-pear upgrade-all
+{
+  "minimum-stability": "dev"
+}
 ```
-
-To update, run `pear upgrade drush/drush`
-
-To get alternate drush versions, replace that last line with one of the below that matches your fancy.
-
-```bash
-pear install drush/drush-5.0.0
-pear install drush/drush-6.0.0RC4
-```
+Merge this in with any other content that may already exist in this file.
 
 See the POST-INSTALL section for configuration tips.
 
